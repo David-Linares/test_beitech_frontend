@@ -1,0 +1,22 @@
+{
+  "name": "BeitechFrontend",
+  "version": "1.0.0",
+  "authors": [
+    "David Linares"
+  ],
+  "description": "Prueba técnica Beitech",
+  "main": "app/index.html",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components"
+  ],
+  "appPath": "app",
+  "dependencies": {
+    "angular": "~1.4.8",
+    "angular-ui-router": "~0.2.12",
+    "angular-bootstrap": "~2.5.0",
+    "bootstrap": "~3.3.6"
+  }
+}

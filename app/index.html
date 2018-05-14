@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es" ng-app="beitechapp">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>Prueba Beitech</title>
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+</head>
+<body ng-controller="appController">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-xs-11 col-xs-offset-1">
+                <h2>Generate Order</h2>
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label>Select Customer</label>
+                        <select ng-model="form.id_customer" ng-options="customer as customer.nameCustomer for customer in customer_list" ng-change="reset_list_products()">
+                            <option value="">-- choose an option --</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Delivery Address</label>
+                        <input ng-model="form.delivery_address" type="text">
+                    </div>
+                    <div class="form-group">
+                        <label>Select Product</label>
+                        <select ng-model="product_select" ng-options="product as product.nameProduct for product in form.id_customer.products" ng-change="add_product(product_select)">
+                            <option value="">-- choose an option --</option>
+                        </select>
+                    </div>
+                    <div class="form-group" ng-repeat="product in form.detail track by $index">
+                        <div class="col-xs-3">
+                            <label>{{product.product_description}}</label>
+                        </div>
+                        <div class="col-xs-3">
+                            <input type="text" class="form-control" ng-model="product.price" placeholder="Price">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <button type="submit" class="btn btn-default" ng-click="saveOrder()">Generate Order</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <hr>
+        <div class="row">
+            <div class="col-xs-11 col-xs-offset-1">
+                <h2>Created Order</h2>
+                <select ng-model="customer_query" ng-options="customer as customer.nameCustomer for customer in customer_list" ng-change="getOrders()">
+                    <option value="">-- choose an option --</option>
+                </select>
+                <strong><p class="text-right">{{initial_date | date : 'fullDate'}} - {{current_date | date : 'fullDate'}}</p></strong>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <td>Creation Date</td>
+                                <td>Order ID</td>
+                                <td>Total ($)</td>
+                                <td>Delivery Address</td>
+                                <td>Products</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="order in order_list">
+                                <td>{{order.dateOrder | date : 'dd - MMM - yyyy'}}</td>
+                                <td>{{order.orderId}}</td>
+                                <td>{{calculate_total(order.detail) | currency : "$" : 0}}</td>
+                                <td>{{order.deliveryAddress}}</td>
+                                <td ng-init="getDetailOrder(order)">
+                                    <div ng-repeat="detail in order.detail track by $index">{{detail.productDescription}}</div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="bower_components/angular/angular.min.js"></script>
+<script src="scripts/app.js"></script>
+</html>

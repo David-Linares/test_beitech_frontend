@@ -1,0 +1,287 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "Descripción de los servicios REST de la prueba Beitech.",
+    "version": "1.0.0",
+    "title": "Documentación Prueba Beitech",
+    "termsOfService": "http://swagger.io/terms/"
+  },
+  "host": "localhost:8080",
+  "basePath": "/",
+  "schemes": [
+    "http"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/customer": {
+      "get": {
+        "description": "Get a List of customers.",
+        "summary": "List of customers.",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Customer"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/orders": {
+      "get": {
+        "description": "Get a List of orders.",
+        "summary": "List of Orders.",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Order"
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "Create order.",
+        "summary": "Create Order.",
+        "parameters": [
+          {
+            "name": "id_customer",
+            "in": "formData",
+            "description": "Id of the customer to set the order",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "delivery_address",
+            "in": "formData",
+            "description": "Address to delivery the order",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "detail",
+            "in": "formData",
+            "description": "Order Detail",
+            "required": true,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "product_description": {
+                  "type": "string"
+                },
+                "price": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/CreateOrder"
+            }
+          },
+          "500": {
+            "description": "Failed",
+            "schema": {
+              "$ref": "#/definitions/ErrorCreateOrder"
+            }
+          }
+        }
+      }
+    },
+    "/orders/customer/{customerId}": {
+      "get": {
+        "description": "Get a orders by customerId between two dates.",
+        "summary": "List of Orders by customerId.",
+        "parameters": [
+          {
+            "name": "customerId",
+            "in": "path",
+            "description": "id of customer",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "initial_date",
+            "in": "query",
+            "description": "Initial date with format yyyy-MM-dd",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "finish_date",
+            "in": "query",
+            "description": "Finish date with format yyyy-MM-dd",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Order"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/order/detail/{orderId}": {
+      "get": {
+        "description": "Get a detail filter by orderId.",
+        "summary": "List of Orders detail.",
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "path",
+            "description": "id of order",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/OrderDetail"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Customer": {
+      "type": "object",
+      "properties": {
+        "customerId": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "nameCustomer": {
+          "type": "string"
+        },
+        "emailCustomer": {
+          "type": "string"
+        },
+        "products": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Product"
+          }
+        }
+      }
+    },
+    "Product": {
+      "type": "object",
+      "properties": {
+        "productId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "nameProduct": {
+          "type": "string"
+        }
+      }
+    },
+    "Order": {
+      "type": "object",
+      "properties": {
+        "orderId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "customer": {
+          "$ref": "#/definitions/Customer"
+        },
+        "deliveryAddress": {
+          "type": "string"
+        },
+        "dateOrder": {
+          "type": "string",
+          "format": "date"
+        },
+        "detail": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/OrderDetail"
+          }
+        }
+      }
+    },
+    "OrderDetail": {
+      "type": "object",
+      "properties": {
+        "orderDetailId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "productDescription": {
+          "type": "string"
+        },
+        "price": {
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "CreateOrder": {
+      "type": "object",
+      "properties": {
+        "msg": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    },
+    "ErrorCreateOrder": {
+      "type": "object",
+      "properties": {
+        "msg": {
+          "type": "string"
+        },
+        "detail": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date"
+        },
+        "status": {
+          "type": "integer",
+          "format": "int32"
+        }
+      }
+    }
+  }
+}
